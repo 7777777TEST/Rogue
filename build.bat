@@ -1,0 +1,1 @@
+g++ src/*.cpp imgui/*.cpp -lopengl32 -lfreeglut -o bin/Rogue
