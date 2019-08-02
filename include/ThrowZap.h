@@ -7,12 +7,17 @@ class ThrowState:public State{
 		ThrowState(Item*,World*);
 		void draw()override;
 		void update(int)override;
-	private:
+		void end();
+	protected:
 		void throwUp();
 		void throwDown();
 		void throwLeft();
 		void throwRight();
 		World* world;
 		Item* item;
+};
+class Zap:public ThrowState{
+	public:
+		Zap(World*);
 };
 #endif

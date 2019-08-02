@@ -1,5 +1,7 @@
 #include"../include/ThrowZap.h"
 #include"../include/Inventory.h"
+#include"../include/Item.h"
+#include"../imgui/imgui.h"
 void ThrowState::draw(){
 }
 void ThrowState::update(int code){
@@ -32,8 +34,16 @@ void ThrowState::update(int code){
 			Log::Post("You don't select.");
 			break;
 	}
-	world->currentLevel->attach(item);
+	end();
 	sequence->Pop();
+}
+void ThrowState::end(){
+	if(item->status.count>0)
+		world->currentLevel->attach(item);
+	else{
+		ImGui::PushStyleColor(ImGuiCol_Text,ImVec4(0,256,0,256));
+		ImGui::PopStyleColor();
+	}
 }
 ThrowState::ThrowState(Item* _item,World* _world){
 	item=_item;
@@ -43,9 +53,23 @@ ThrowState::ThrowState(Item* _item,World* _world){
 void ThrowState::throwUp(){
 	Point pos=item->pos;
 	while(1){
+		if(item->status.count<=0){
+			Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+			tmp->status.name="|";
+			tmp->status.type=-1;
+			tmp->status.count=0;
+			world->currentLevel->attach(tmp);
+		}
 		pos.y--;
 		if(!(*world).currentLevel->getMap().isMove(pos.x,pos.y)
 			||(*world).currentLevel->atItem(pos)){
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="|";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 			pos.y++;
 			item->pos=pos;
 			return;
@@ -58,15 +82,37 @@ void ThrowState::throwUp(){
 				Log::Post("You attack "+(*world).currentLevel->atActor(pos)->getName());
 			}
 			return;
+		}else{
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="|";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 		}
 	}
 }
 void ThrowState::throwDown(){
 	Point pos=item->pos;
 	while(1){
+		if(item->status.count<=0){
+			Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+			tmp->status.name="|";
+			tmp->status.type=-1;
+			tmp->status.count=0;
+			world->currentLevel->attach(tmp);
+		}
 		pos.y++;
 		if(!(*world).currentLevel->getMap().isMove(pos.x,pos.y)
 			||(*world).currentLevel->atItem(pos)){
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="|";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 			pos.y--;
 			item->pos=pos;
 			return;
@@ -79,15 +125,37 @@ void ThrowState::throwDown(){
 				Log::Post("You attack "+(*world).currentLevel->atActor(pos)->getName());
 			}
 			return;
+		}else{
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="|";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 		}
 	}
 }
 void ThrowState::throwLeft(){
 	Point pos=item->pos;
 	while(1){
+		if(item->status.count<=0){
+			Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+			tmp->status.name="-";
+			tmp->status.type=-1;
+			tmp->status.count=0;
+			world->currentLevel->attach(tmp);
+		}
 		pos.x--;
 		if(!(*world).currentLevel->getMap().isMove(pos.x,pos.y)
 			||(*world).currentLevel->atItem(pos)){
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="-";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 			pos.x++;
 			item->pos=pos;
 			return;
@@ -100,15 +168,37 @@ void ThrowState::throwLeft(){
 				Log::Post("You attack "+(*world).currentLevel->atActor(pos)->getName());
 			}
 			return;
+		}else{
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="-";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 		}
 	}
 }
 void ThrowState::throwRight(){
 	Point pos=item->pos;
 	while(1){
+		if(item->status.count<=0){
+			Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+			tmp->status.name="-";
+			tmp->status.type=-1;
+			tmp->status.count=0;
+			world->currentLevel->attach(tmp);
+		}
 		pos.x++;
 		if(!(*world).currentLevel->getMap().isMove(pos.x,pos.y)
 			||(*world).currentLevel->atItem(pos)){
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="-";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 			pos.x--;
 			item->pos=pos;
 			return;
@@ -121,6 +211,18 @@ void ThrowState::throwRight(){
 				Log::Post("You attack "+(*world).currentLevel->atActor(pos)->getName());
 			}
 			return;
+		}else{
+			if(item->status.count<=0){
+				Item* tmp=new Item(Item::Status(),Point(pos.x,pos.y));
+				tmp->status.name="-";
+				tmp->status.type=-1;
+				tmp->status.count=0;
+				world->currentLevel->attach(tmp);
+			}
 		}
 	}
+}
+Zap::Zap(World* _world):ThrowState(new Item(Item::Status(),_world->player->getPos()),_world){
+	item->status.type=-1;
+	item->status.count=0;
 }

@@ -61,7 +61,18 @@ void Inventory::update(int code){
 			commands.clear();
 			currentCmd = 0;
 			if(!items[selected]->status.equip){
-				commands.emplace_back("Use");
+				switch(items[selected]->status.type){
+					case Item::Type::Armor:
+					case Item::Type::Weapon:
+						commands.emplace_back("Equip");
+						break;
+					case Item::Type::Wand:
+						commands.emplace_back("Zap");
+						break;
+					case Item::Type::Food:
+						commands.emplace_back("Eat");
+						break;
+				}
 			}else{
 				commands.emplace_back("Remove");
 			}
@@ -127,8 +138,17 @@ void Inventory::Drop(){
 	world->skipPlayerTurn();
 }
 void Inventory::Use(){
-	actor->Use(items[selected]);
-	world->skipPlayerTurn();
+	switch(items[selected]->status.type){
+		case Item::Type::Wand:
+			sequence->Push(new Zap(world));
+			break;
+		case Item::Type::Amulet:
+			break;
+		default:
+			actor->Use(items[selected]);
+			world->skipPlayerTurn();
+			break;
+	}
 }
 void Inventory::Throw(){
 	sequence->Push(new ThrowState(actor->detach(items[selected]),world));

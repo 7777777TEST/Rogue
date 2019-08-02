@@ -5,7 +5,7 @@ Level::Level(const char* data){
 Map Level::getMap()const{
 	return *map;
 }
-void Level::draw(Console& console)const{
+void Level::draw(Console& console){
 	map->draw(console);
 	for(Item* item:items){
 		console.setChar(item->pos,item->getChar());
@@ -50,10 +50,18 @@ void Level::updateEnemy(){
 			}
 		}
 	}
+	for(Item* item:items){
+		if(item->status.count<=0){
+			delete detach(*item);
+		}
+	}
+	rmDeadEnemy();
+}
+void Level::rmDeadEnemy(){
 	for(Actor* actor:actors){
 		if(actor->getHp()<=0){
 			if(actor->type!=Actor::Type::Hero)
-				actor=detach(*actor);
+				delete detach(*actor);
 		}
 	}
 }

@@ -9,7 +9,7 @@ class Level{
     public:
         Level(const char*);
         Map getMap()const;
-        void draw(Console&)const;
+        void draw(Console&);
         //For Actor
         bool Move(Actor*,Actor::Dir);
         void attach(Actor*);
@@ -17,6 +17,7 @@ class Level{
         Actor* getPlayer();
         Actor* atActor(const Point);
         void updateEnemy();
+        void rmDeadEnemy();
         std::vector<Actor*> getActors()const;
         //For item
         void attach(Item*);

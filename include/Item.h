@@ -13,6 +13,7 @@ class Item{
 			Ring,
 			Gold,
 			Amulet,
+			Wand,
 			MaxType
 		};
 		enum Flags{

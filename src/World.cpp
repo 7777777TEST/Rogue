@@ -10,8 +10,8 @@ World::World(){
 	currentLevel->attach(player);
 	Item::Status s;
 	s.id=1;
-	s.name="armor";
-	s.type=Item::Type::Armor;
+	s.name="wand";
+	s.type=Item::Type::Wand;
 	currentLevel->attach(new Item(s,Point(2,0)));
 	s.id=2;
 	Actor* a=new Actor();
@@ -40,7 +40,7 @@ void World::update(int code){
 			}
 			break;
 	}
-	currentLevel->updateEnemy();
+	currentLevel->rmDeadEnemy();
 }
 void World::draw(Console& console){
 	currentLevel->draw(console);
@@ -68,16 +68,23 @@ void World::movePlayer(int code){
 			dir=Actor::Dir::Right;
 			break;
 	}
-	currentLevel->Move(player,dir);
+	bool ret=currentLevel->Move(player,dir);
 	if(currentLevel->atItem(player->getPos())){
-		//pick up
-		Log::Post(player->getName()+" picked "+currentLevel->atItem(player->getPos())->status.name);
-		player->attach(currentLevel->detach(*(currentLevel->atItem(player->getPos()))));
+		if(currentLevel->atItem(player->getPos())->status.count>0){
+			//pick up
+			Log::Post(player->getName()+" picked "+currentLevel->atItem(player->getPos())->status.name);
+			player->attach(currentLevel->detach(*(currentLevel->atItem(player->getPos()))));
+		}
+	}
+	if(ret){
+		currentLevel->updateEnemy();
 	}
 }
 void World::descend(){
 	currentLevel->detach(*player);
+	currentLevel->updateEnemy();
 }
 void World::climb(){
 	currentLevel->detach(*player);
+	currentLevel->updateEnemy();
 }

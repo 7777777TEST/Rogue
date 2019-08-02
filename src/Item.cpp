@@ -17,6 +17,22 @@ char Item::getChar()const{
             return '[';
         case Type::Weapon:
             return '(';
+        case Type::Amulet:
+            return '\"';
+        case Type::Food:
+            return '%';
+        case Type::Ring:
+            return '=';
+        case Type::Wand:
+            return '/';
+        case Type::Gold:
+            return '$';
+        case Type::Scroll:
+            return '?';
+        default:
+            if(status.name.length()>0)
+                return status.name[0];
+            return ' ';
     }
 }
 bool Item::hasFlag(Flags flag) const

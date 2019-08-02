@@ -94,6 +94,7 @@ void Actor::changeArmor(int value){
 	status.armor+=value;
 }
 bool Actor::attach(Item* target){
+	if(target->status.count<=0)return false;//failed
 	for(Item* item:items){
 		if(target->status.id==item->status.id&&
 			target->status.type==item->status.type){
@@ -155,6 +156,7 @@ bool Actor::Use(Item* item){
 			}
 			break;
 		case Item::Type::Armor:
+		case Item::Type::Weapon:
 			if(item->status.equip){
 				rmEquip(item);
 				Log::Post("You have removed "+item->status.name);

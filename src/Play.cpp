@@ -6,6 +6,7 @@ void Play::update(int code){
 	if(world.player->dead())return;
     if(code=='0'){
         sequence->Push(new Inventory(world.player,&world));
+        return;
     }
     world.update(code);
     if(world.player->dead()){
